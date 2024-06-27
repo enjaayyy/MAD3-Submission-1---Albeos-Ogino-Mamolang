@@ -1,1 +1,7 @@
-# MAD3-Submission-1---Albeos-Ogino-Mamolang
+Uses the GoRouter routing (Albeos)
+Must be able to log in with the predefined account (Albeos)
+Aesthetically pleasing login form with validation (Albeos)
+Sessions must persist between restarts (Ogino)
+Sessions must be cleared after logout  (Ogino)
+User must be able to log in or log out (Mamolang)
+Router must react to changes in authentication state. (Mamolang)
