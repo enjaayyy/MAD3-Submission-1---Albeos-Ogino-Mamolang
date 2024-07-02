@@ -1,49 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:go_router/go_router.dart';
-import 'package:midterm_project/screens/login.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:midterm_project/screens/authnotifier.dart';
 
-class Homescreen extends StatelessWidget{
-  const Homescreen ({super.key});
+class Homescreen extends StatefulWidget {
+  const Homescreen({Key? key}) : super(key: key);
 
-
-void _logout(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('loggedInUser');
-    context.go('/');
+  @override
+  _HomescreenState createState() => _HomescreenState();
 }
 
+class _HomescreenState extends State<Homescreen> {
+  String? _username;
 
- @override
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  Future<void> _loadUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _username = prefs.getString('loggedInUser');
+    });
+  }
+
+  void _logout(BuildContext context) async {
+    await context.read<AuthNotifier>().logout();
+    if (context.mounted) {
+      context.go('/');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Homescreen'),
+        title: const Text('Homescreen'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () => _logout(context),
           ),
         ],
       ),
-      body: FutureBuilder<SharedPreferences>(
-        future: SharedPreferences.getInstance(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            final loggedInUser = snapshot.data?.getString('loggedInUser');
-            if (loggedInUser != null) {
-              return Center(child: Text("Welcome, $loggedInUser!"));
-            } else {
-              // If no logged in user, navigate back to login screen
-              context.go('/');
-              return SizedBox.shrink();
-            }
-          }
-        },
+      body: Center(
+        child: _username == null
+            ? const CircularProgressIndicator()
+            : Text('Welcome, $_username!'),
       ),
-    );}
+    );
+  }
 }

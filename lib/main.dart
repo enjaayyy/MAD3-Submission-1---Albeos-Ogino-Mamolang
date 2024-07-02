@@ -12,9 +12,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: router,
+    return ChangeNotifierProvider(
+      create: (_) => AuthNotifier()..checkLoginStatus(),
+      child: Consumer<AuthNotifier>(
+        builder: (context, authNotifier, _) {
+          return MaterialApp.router(
+            routerConfig: router,
+          );
+        },
+      ),
     );
   }
 }
+
 

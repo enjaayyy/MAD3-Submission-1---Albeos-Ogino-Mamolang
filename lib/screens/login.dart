@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:midterm_project/screens/homescreen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:midterm_project/screens/authnotifier.dart';
 
 class LoginScreen extends StatefulWidget{
   const LoginScreen({Key? key}) : super (key: key);
@@ -12,18 +13,17 @@ class LoginScreen extends StatefulWidget{
 
 class _LoginScreenState extends State<LoginScreen>{
 
-   TextEditingController _usernameController = TextEditingController();
-   TextEditingController _passwordController = TextEditingController();
-
-   late SharedPreferences _prefs;
+   final TextEditingController _usernameController = TextEditingController();
+   final TextEditingController _passwordController = TextEditingController();
    
     String _errorMessage = '';
 
    @override
-   void initState() {
-    super.initState();
-    _initSharedPreferences();
-   }
+    void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
    Future<void> _initSharedPreferences() async { 
    _prefs = await SharedPreferences.getInstance();
@@ -31,21 +31,22 @@ class _LoginScreenState extends State<LoginScreen>{
     await _prefs.setString('password', '12345');
    }
 
-   void _login()  {
+   void _login(BuildContext context) async {
+    final authNotifier = context.read<AuthNotifier>();
     String inputUsername = _usernameController.text.trim();
     String inputPassword = _passwordController.text.trim();
 
-    String? registeredUser = _prefs.getString('username');
-    String? registeredPass = _prefs.getString('password');
-
-    if(inputUsername == registeredUser && inputPassword == registeredPass){
-      _prefs.setString('loggedInUser', inputUsername);
-      context.go('/homescreen');
-    }
-    else {
-      setState(() {
+    if (inputUsername == 'administrator' && inputPassword == '12345') {
+      await authNotifier.login(inputUsername);
+      if (mounted) {
+        context.go('/homescreen');
+      }
+    } else {
+      if(mounted) {
+        setState(() {
         _errorMessage = 'Invalid username or password';
       });
+      }
     }
    }
 
