@@ -18,15 +18,15 @@ class _LoginScreenState extends State<LoginScreen>{
    late SharedPreferences _prefs;
    
     String _errorMessage = '';
+
    @override
    void initState() {
     super.initState();
     _initSharedPreferences();
    }
 
-   Future<void> _initSharedPreferences() async {
-    _prefs = await SharedPreferences.getInstance();
-
+   Future<void> _initSharedPreferences() async { 
+   _prefs = await SharedPreferences.getInstance();
     await _prefs.setString('username', 'administrator');
     await _prefs.setString('password', '12345');
    }
@@ -39,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen>{
     String? registeredPass = _prefs.getString('password');
 
     if(inputUsername == registeredUser && inputPassword == registeredPass){
+      _prefs.setString('loggedInUser', inputUsername);
       context.go('/homescreen');
     }
     else {
