@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:midterm_project/screens/login.dart';
-import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:midterm_project/router/router.dart';
+import 'package:midterm_project/screens/authnotifier.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,5 +24,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
