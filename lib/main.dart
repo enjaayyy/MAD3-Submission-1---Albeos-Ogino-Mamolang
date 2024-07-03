@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:midterm_project/screens/login.dart';
-import 'package:go_router/go_router.dart';
 import 'package:midterm_project/router/router.dart';
 
 void main() {

@@ -4,6 +4,7 @@ import 'package:midterm_project/screens/homescreen.dart';
 import 'package:midterm_project/screens/login.dart';
 
 final GoRouter router = GoRouter(  
+  initialLocation: '/',
   routes: <RouteBase>[
     GoRoute( 
       path: '/',

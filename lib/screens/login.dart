@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:midterm_project/screens/homescreen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen>{
    late SharedPreferences _prefs;
    
     String _errorMessage = '';
+    bool _isLoading = true;
 
    @override
    void initState() {
@@ -29,6 +29,16 @@ class _LoginScreenState extends State<LoginScreen>{
    _prefs = await SharedPreferences.getInstance();
     await _prefs.setString('username', 'administrator');
     await _prefs.setString('password', '12345');
+
+     String? loggedInUser = _prefs.getString('loggedInUser');
+    if (loggedInUser != null) {
+      context.go('/homescreen');
+ } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+
    }
 
    void _login()  {
@@ -52,7 +62,9 @@ class _LoginScreenState extends State<LoginScreen>{
    @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Container(  
+      body:_isLoading
+       ? Center(child: CircularProgressIndicator())
+          : Container(
         color: Colors.white,
       child: Column( 
         children: [
