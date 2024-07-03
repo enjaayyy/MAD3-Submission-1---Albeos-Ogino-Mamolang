@@ -1,38 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:midterm_project/screens/homescreen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:midterm_project/screens/authnotifier.dart';
 import 'package:provider/provider.dart';
+import 'package:midterm_project/screens/authnotifier.dart';
 
-class LoginScreen extends StatefulWidget{
-  const LoginScreen({Key? key}) : super (key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>{
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-   final TextEditingController _usernameController = TextEditingController();
-   final TextEditingController _passwordController = TextEditingController();
-   
-    String _errorMessage = '';
+  String _errorMessage = '';
 
-   @override
-    void dispose() {
+  @override
+  void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-   Future<void> _initSharedPreferences() async { 
-   _prefs = await SharedPreferences.getInstance();
-    await _prefs.setString('username', 'administrator');
-    await _prefs.setString('password', '12345');
-   }
-
-   void _login(BuildContext context) async {
+  void _login(BuildContext context) async {
     final authNotifier = context.read<AuthNotifier>();
     String inputUsername = _usernameController.text.trim();
     String inputPassword = _passwordController.text.trim();
@@ -43,42 +34,42 @@ class _LoginScreenState extends State<LoginScreen>{
         context.go('/homescreen');
       }
     } else {
-      if(mounted) {
+      if (mounted) {
         setState(() {
-        _errorMessage = 'Invalid username or password';
-      });
+          _errorMessage = 'Invalid username or password';
+        });
       }
     }
-   }
+  }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Container(  
+      body: Container(
         color: Colors.white,
-      child: Column( 
-        children: [
-           Image.asset( 
-            'assets/images/login.jpg',
-            width: 250,
-            height: 250,
-           ),
-           const Center( 
-            child: Text(
-            "Welcome",
-            style: TextStyle(  
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
+        child: Column(
+          children: [
+            Image.asset(
+              'assets/images/login.jpg',
+              width: 250,
+              height: 250,
+            ),
+            const Center(
+              child: Text(
+                "Welcome",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 20,),
-            const Row(  
-              children: [  
+            const SizedBox(height: 20),
+            const Row(
+              children: [
                 SizedBox(width: 78),
                 Text(
                   "Username",
-                  style: TextStyle( 
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w100,
                     color: Colors.grey,
@@ -87,22 +78,22 @@ class _LoginScreenState extends State<LoginScreen>{
               ],
             ),
             const SizedBox(height: 10),
-            Container(  
+            Container(
               width: 300,
-              child: TextField(  
+              child: TextField(
                 controller: _usernameController,
                 decoration: const InputDecoration(
-                // hintText: 'Enter Username',    
-                ),
-            )
+                    // hintText: 'Enter Username',
+                    ),
+              ),
             ),
-            const SizedBox(height: 30,),
-            const Row(  
-              children: [  
+            const SizedBox(height: 30),
+            const Row(
+              children: [
                 SizedBox(width: 78),
                 Text(
                   "Password",
-                  style: TextStyle( 
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w100,
                     color: Colors.grey,
@@ -111,39 +102,44 @@ class _LoginScreenState extends State<LoginScreen>{
               ],
             ),
             const SizedBox(height: 10),
-            Container(  
+            Container(
               width: 300,
-              child: TextField(  
+              child: TextField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
-                  // hintText: 'Enter password',
-                ),
+                    // hintText: 'Enter password',
+                    ),
+              ),
             ),
-            ),
-            SizedBox( height: 40,),
-            Container(  
-              height:30,
+            const SizedBox(height: 40),
+            Container(
+              height: 30,
               width: 200,
-
-              child: ElevatedButton(  
-                onPressed: _login,
+              child: ElevatedButton(
+                onPressed: () => _login(context),
                 child: const Text(
                   "Login",
-                  style: TextStyle(  
+                  style: TextStyle(
                     color: Colors.white,
-                  )),
+                  ),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
-                )
-              )
-            )
-            
-        ],
-      )  
-      )
-          
+                ),
+              ),
+            ),
+            if (_errorMessage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Text(
+                  _errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
-    
   }
 }
