@@ -3,6 +3,7 @@ import 'package:midterm_project/screens/homescreen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:midterm_project/screens/authnotifier.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget{
   const LoginScreen({Key? key}) : super (key: key);
